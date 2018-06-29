@@ -14,7 +14,10 @@ import org.apache.beam.sdk.values.PCollectionTuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** Example how to use ExampleTransform in Beam */
+/**
+ * Common example how to use {@link ExampleTransform}/{@link
+ * org.gbif.pipelines.transform.RecordTransform} in Apache Beam
+ */
 public class ExampleBeamPipeline {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExampleBeamPipeline.class);
@@ -37,14 +40,14 @@ public class ExampleBeamPipeline {
         p.apply("Read an avro file", AvroIO.read(ExtendedRecord.class).from(inputFile));
 
     // STEP 2: Apply our transform
-    PCollectionTuple temporalRecordTuple = verbatimRecords.apply(transform);
+    PCollectionTuple exampleRecordTuple = verbatimRecords.apply(transform);
 
     // Getting data from transformation
     PCollection<ExampleRecord> exampleRecords =
-        temporalRecordTuple.get(transform.getDataTag()).apply(Kv2Value.create());
+        exampleRecordTuple.get(transform.getDataTag()).apply(Kv2Value.create());
     // Getting issues from transformation
     PCollection<OccurrenceIssue> issueRecords =
-        temporalRecordTuple.get(transform.getIssueTag()).apply(Kv2Value.create());
+        exampleRecordTuple.get(transform.getIssueTag()).apply(Kv2Value.create());
 
     // STEP 3: Save to an avro file
     exampleRecords.apply(

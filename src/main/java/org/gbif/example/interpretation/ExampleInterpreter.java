@@ -6,7 +6,7 @@ import org.gbif.pipelines.io.avro.ExtendedRecord;
 
 import java.util.function.Function;
 
-/** Java function for a business logic*/
+/** Java function for a business logic */
 public interface ExampleInterpreter
     extends Function<ExtendedRecord, Interpretation<ExtendedRecord>> {
 

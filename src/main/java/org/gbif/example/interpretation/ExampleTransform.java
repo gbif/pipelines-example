@@ -15,7 +15,37 @@ import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.values.KV;
 
-/** Common abstraction for beam */
+/**
+ * Common abstraction for Apache Beam, extends RecordTransform, which extends Beam's PTransform
+ * class. RecordTransform it as a typical transformation with one input format and two outputs.
+ *
+ * <p>Input: {@link ExtendedRecord} as a data source
+ *
+ * <p>Outputs: first - the main data output, in our case {@link ExampleRecord} and second common
+ * type - {@link org.gbif.pipelines.io.avro.issue.OccurrenceIssue}
+ *
+ * <p>Example of using {@link ExampleTransform}:
+ *
+ * <pre>{@code
+ * ExampleTransform transform = ExampleTransform.create().withAvroCoders(pipeline);
+ * PCollectionTuple recordTuple = collections.apply(transform);
+ *
+ * }</pre>
+ *
+ * <p>You can get data from RecordTransform by tags, for main data use method - {@link
+ * RecordTransform#getDataTag()}, for issue data use - {@link RecordTransform#getIssueTag()}
+ *
+ * <p>Example:
+ *
+ * <pre>{@code
+ * PCollection<KV<String, ExampleRecord>> example = recordTuple.get(transform.getDataTag());
+ *
+ * or
+ *
+ * PCollection<ExampleRecord> example = recordTuple.get(transform.getDataTag()).apply(Kv2Value.create());
+ *
+ * }</pre>
+ */
 public class ExampleTransform extends RecordTransform<ExtendedRecord, ExampleRecord> {
 
   private ExampleTransform() {
@@ -59,6 +89,11 @@ public class ExampleTransform extends RecordTransform<ExtendedRecord, ExampleRec
     };
   }
 
+  /**
+   * If we want to use Avro as the main file type, we must register the necessary avro classes in
+   * the pipeline. If you use several {@link RecordTransform}, this is the easiest way how not
+   * forget to register all avro classes
+   */
   @Override
   public ExampleTransform withAvroCoders(Pipeline pipeline) {
     Coders.registerAvroCoders(
