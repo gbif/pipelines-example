@@ -24,32 +24,33 @@ public class ExampleBeamPipeline {
 
   public static void main(String[] args) {
 
-    // Create a beam pipeline
+    LOG.info("Initializing pipeline options");
     ExampleOptions options = PipelineOptionsFactory.fromArgs(args).as(ExampleOptions.class);
 
+    LOG.info("Creating a beam pipeline");
     Pipeline p = Pipeline.create(options);
     String inputFile = options.getInputFile();
     String targetDataDirectory = options.getDefaultTargetDirectory() + "/example-record";
     String targetIssueDirectory = options.getDefaultTargetDirectory() + "/examaple-issue";
 
-    // Create transform object
+    LOG.info("Creating transform object");
     ExampleTransform transform = ExampleTransform.create().withAvroCoders(p);
 
-    // STEP 1: Read verbatim avro files
+    LOG.info("STEP 1: Read verbatim avro files");
     PCollection<ExtendedRecord> verbatimRecords =
         p.apply("Read an avro file", AvroIO.read(ExtendedRecord.class).from(inputFile));
 
-    // STEP 2: Apply our transform
+    LOG.info("STEP 2: Apply our transform");
     PCollectionTuple exampleRecordTuple = verbatimRecords.apply(transform);
 
-    // Getting data from transformation
+    LOG.info("Getting data from transformation");
     PCollection<ExampleRecord> exampleRecords =
         exampleRecordTuple.get(transform.getDataTag()).apply(Kv2Value.create());
-    // Getting issues from transformation
+    LOG.info("Getting issues from transformation");
     PCollection<OccurrenceIssue> issueRecords =
         exampleRecordTuple.get(transform.getIssueTag()).apply(Kv2Value.create());
 
-    // STEP 3: Save to an avro file
+    LOG.info("STEP 3: Save to an avro file");
     exampleRecords.apply(
         "Write data to an avro file",
         AvroIO.write(ExampleRecord.class).to(targetDataDirectory).withSuffix(".avro"));

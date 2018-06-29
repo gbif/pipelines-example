@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 /**
  * If you want to add your new step after GBIF's main steps, you can follow this example:
  *
- * Example of {@link DataProcessingPipelineOptions}, you can pass arguments via main call:
+ * <p>Example of {@link DataProcessingPipelineOptions}, you can pass arguments via main call:
  *
  * <pre>{@code
  * java -cp pipelines-example-1.0-SNAPSHOT-shaded.jar org.gbif.example.interpretation.ExampleDynamicPipeline --wsProperties=... and etc.
@@ -56,9 +56,13 @@ public class ExampleDynamicPipeline {
   private static final Logger LOG = LoggerFactory.getLogger(ExampleDynamicPipeline.class);
 
   public static void main(String[] args) {
+    LOG.info("Initializing pipeline options");
     DataProcessingPipelineOptions options = DataPipelineOptionsFactory.create(args);
+
+    LOG.info("Creating common GBIF pipeline");
     GbifInterpretationPipeline gbifPipeline = GbifInterpretationPipeline.create(options);
 
+    LOG.info("Initializing a new pipeline step");
     final String stepName = "EXAMPLE";
 
     PipelineTargetPaths paths = FsUtils.createPaths(options, stepName);
@@ -74,6 +78,7 @@ public class ExampleDynamicPipeline {
                 .avroCodec(gbifPipeline.getAvroCodec())
                 .build();
 
+    LOG.info("Adding the new pipeline step to GBIF pipeline");
     gbifPipeline.addNewStep(stepName, exampleStep);
 
     LOG.info("Run the pipeline");
