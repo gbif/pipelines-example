@@ -1,4 +1,4 @@
-package org.gbif.example;
+package org.gbif.example.interpretation;
 
 import org.gbif.example.io.avro.ExampleRecord;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
@@ -15,9 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Example how to use ExampleTransform in Beam */
-public class ExampleBeam {
+public class ExampleBeamPipeline {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ExampleBeam.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ExampleBeamPipeline.class);
 
   public static void main(String[] args) {
 

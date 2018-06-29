@@ -1,10 +1,10 @@
-package org.gbif.example;
+package org.gbif.example.interpretation;
 
 import org.apache.beam.sdk.annotations.Experimental;
 import org.apache.beam.sdk.options.Description;
 import org.apache.beam.sdk.options.PipelineOptions;
 
-import static org.apache.beam.sdk.annotations.Experimental.*;
+import static org.apache.beam.sdk.annotations.Experimental.Kind;
 
 @Experimental(Kind.FILESYSTEM)
 public interface ExampleOptions extends PipelineOptions {

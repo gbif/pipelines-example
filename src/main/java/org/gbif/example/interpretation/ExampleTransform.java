@@ -1,4 +1,4 @@
-package org.gbif.example;
+package org.gbif.example.interpretation;
 
 import org.gbif.example.io.avro.ExampleRecord;
 import org.gbif.pipelines.common.beam.Coders;
