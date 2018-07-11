@@ -22,7 +22,7 @@
     <dwca-io.version>2.0-RC1</dwca-io.version>
 
     <!-- Libraries -->
-    <apache.beam.version>2.4.0</apache.beam.version>
+    <apache.beam.version>2.5.0</apache.beam.version>
     <avro.version>1.8.2</avro.version>
     <slf4j.version>1.7.24</slf4j.version>
     <logback.version>1.1.5</logback.version>
