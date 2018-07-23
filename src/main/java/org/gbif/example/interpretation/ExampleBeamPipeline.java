@@ -3,12 +3,12 @@ package org.gbif.example.interpretation;
 import org.gbif.example.io.avro.ExampleRecord;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.io.avro.issue.OccurrenceIssue;
-import org.gbif.pipelines.transform.Kv2Value;
 
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
 import org.apache.beam.sdk.io.AvroIO;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
+import org.apache.beam.sdk.transforms.Values;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.PCollectionTuple;
 import org.slf4j.Logger;
@@ -45,10 +45,10 @@ public class ExampleBeamPipeline {
 
     LOG.info("Getting data from transformation");
     PCollection<ExampleRecord> exampleRecords =
-        exampleRecordTuple.get(transform.getDataTag()).apply(Kv2Value.create());
+        exampleRecordTuple.get(transform.getDataTag()).apply(Values.create());
     LOG.info("Getting issues from transformation");
     PCollection<OccurrenceIssue> issueRecords =
-        exampleRecordTuple.get(transform.getIssueTag()).apply(Kv2Value.create());
+        exampleRecordTuple.get(transform.getIssueTag()).apply(Values.create());
 
     LOG.info("STEP 3: Save to an avro file");
     exampleRecords.apply(
