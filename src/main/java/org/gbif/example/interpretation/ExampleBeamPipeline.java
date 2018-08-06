@@ -29,9 +29,9 @@ public class ExampleBeamPipeline {
 
     LOG.info("Creating a beam pipeline");
     Pipeline p = Pipeline.create(options);
-    String inputFile = options.getInputFile();
-    String targetDataDirectory = options.getDefaultTargetDirectory() + "/example-record";
-    String targetIssueDirectory = options.getDefaultTargetDirectory() + "/examaple-issue";
+    String inputFile = options.getInputPath();
+    String targetDataDirectory = options.getTargetPath() + "/example-record";
+    String targetIssueDirectory = options.getTargetPath() + "/examaple-issue";
 
     LOG.info("Creating transform object");
     ExampleTransform transform = ExampleTransform.create().withAvroCoders(p);

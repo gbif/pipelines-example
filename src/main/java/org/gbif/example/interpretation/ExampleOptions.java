@@ -10,13 +10,13 @@ import static org.apache.beam.sdk.annotations.Experimental.Kind;
 public interface ExampleOptions extends PipelineOptions {
 
   @Description("Default directory where the target file will be written")
-  String getDefaultTargetDirectory();
+  String getTargetPath();
 
-  void setDefaultTargetDirectory(String targetDirectory);
+  void setTargetPath(String targetDirectory);
 
   @Description(
       "Path of the input file, the path can be absolute or relative to the directory where the pipeline is running.")
-  String getInputFile();
+  String getInputPath();
 
-  void setInputFile(String inputFile);
+  void setInputPath(String inputFile);
 }
