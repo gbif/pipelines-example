@@ -18,7 +18,7 @@
     <avro-generated-path>${project.basedir}/src/main/java-generated/</avro-generated-path>
 
     <!-- GBIF -->
-    <gbif-pipelines.version>1.1</gbif-pipelines.version>
+    <gbif-pipelines.version>1.2-SNAPSHOT</gbif-pipelines.version>
     <dwca-io.version>2.0-RC1</dwca-io.version>
 
     <!-- Libraries -->

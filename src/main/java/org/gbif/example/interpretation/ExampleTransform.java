@@ -2,18 +2,18 @@ package org.gbif.example.interpretation;
 
 import org.gbif.example.io.avro.ExampleRecord;
 import org.gbif.pipelines.common.beam.Coders;
-import org.gbif.pipelines.core.interpretation.Interpretation;
+import org.gbif.pipelines.core.interpretation.InterpreterHandler;
 import org.gbif.pipelines.io.avro.ExtendedRecord;
 import org.gbif.pipelines.io.avro.issue.OccurrenceIssue;
-import org.gbif.pipelines.io.avro.issue.Validation;
 import org.gbif.pipelines.transform.RecordTransform;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.values.KV;
+
+import static org.gbif.example.interpretation.ExampleInterpreter.interpretStepOne;
+import static org.gbif.example.interpretation.ExampleInterpreter.interpretStepThree;
+import static org.gbif.example.interpretation.ExampleInterpreter.interpretStepTwo;
 
 /**
  * Common abstraction for Apache Beam, extends RecordTransform, which extends Beam's PTransform
@@ -65,26 +65,16 @@ public class ExampleTransform extends RecordTransform<ExtendedRecord, ExampleRec
         // Context element to be interpreted
         ExtendedRecord extendedRecord = context.element();
         String id = extendedRecord.getId();
-        List<Validation> validations = new ArrayList<>();
 
         // Transformation main output
-        ExampleRecord exampleRecord = ExampleRecord.newBuilder().setId(id).build();
-
-        Interpretation.of(extendedRecord)
-            .using(ExampleInterpreter.interpretStepOne(exampleRecord))
-            .using(ExampleInterpreter.interpretStepTwo(exampleRecord))
-            .using(ExampleInterpreter.interpretStepThree(exampleRecord))
-            .forEachValidation(trace -> validations.add(toValidation(trace.getContext())));
-
-        // Additional output
-        if (!validations.isEmpty()) {
-          OccurrenceIssue issue =
-              OccurrenceIssue.newBuilder().setId(id).setIssues(validations).build();
-          context.output(getIssueTag(), KV.of(id, issue));
-        }
-
-        // Main output
-        context.output(getDataTag(), KV.of(exampleRecord.getId(), exampleRecord));
+        // Interpret metadata terms and add validations
+        InterpreterHandler.of(extendedRecord, new ExampleRecord())
+            .withId(id)
+            .using(interpretStepOne())
+            .using(interpretStepTwo())
+            .using(interpretStepThree())
+            .consumeData(d -> context.output(getDataTag(), KV.of(id, d)))
+            .consumeIssue(i -> context.output(getIssueTag(), KV.of(id, i)));
       }
     };
   }
